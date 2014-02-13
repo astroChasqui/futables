@@ -1,0 +1,58 @@
+<?php
+
+  $username = $_GET["username"];
+
+  include "include/database.php";
+  include "include/functions.php";
+
+  $result = queryMysql("SELECT id, name FROM users
+                        WHERE username = '$username'");
+  $row = mysql_fetch_assoc($result);
+  $tables_user_id = $row["id"];
+  $tables_user_name = $row["name"];
+
+  $result = queryMysql("SELECT id, name FROM leagues
+                        WHERE user_id = $tables_user_id");
+  while ($row = mysql_fetch_assoc($result)) {
+    $league_ids[] = $row["id"];
+    $leagues[] = $row["name"];
+  }
+
+?>
+
+<html>
+
+<head>
+  <title>FUTABLES - Tables</title>
+  <base href="/futables/">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+
+  <h1>FUTABLES</h1>
+
+  <h2>TABLES</h2>
+
+  <?php
+    echo "<p>$tables_user_name</p>";
+
+    if (isset($leagues)) {
+      echo "<ul>";
+      foreach ($leagues as $index => $league) {
+        $league = str_replace(" ", "_", $league);
+        echo "<li><a href='$username/$league'>
+                  $league</a></li>";
+      }
+      echo "</ul>";
+    } else {
+      echo "No leagues to show.";
+    }
+
+  ?>
+
+  <p><a href="index.html">Home</a></p>
+
+</body>
+
+</html>

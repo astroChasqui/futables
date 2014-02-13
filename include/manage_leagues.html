@@ -1,0 +1,22 @@
+<form id="showLeagueForm" action="manage.html" method="post"
+      style="display:table-cell;width:300px;">
+  <select id="league_to_show" name="league_to_show"
+          onChange="showLeague();">
+    <option disabled selected>LEAGUE</option>
+  <?php
+    if (isset($leagues)) {
+      foreach ($leagues as $index => $league) {
+        echo "<option value=$league_ids[$index]>$league</option>";
+      }
+    }
+  ?>
+  </select>
+</form>
+
+<form id="createNewLeagueForm" method="post"
+      style="display:table-cell;text-align:right;width:500px">
+  <input type="text" name="new_league_name"
+         placeholder="New league name">
+  <input type="submit" value="Create new league"
+         name="create_new_league">
+</form>

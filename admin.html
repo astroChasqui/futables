@@ -1,0 +1,129 @@
+<?php
+
+  include "include/functions.php";
+  include "include/database.php";
+
+  $query_setup_create_database = "
+    CREATE DATABASE futables;
+  ";
+
+  $query_setup_table_users = "
+    CREATE TABLE users (
+      id          SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      username    VARCHAR(20) NOT NULL,
+      password    CHAR(32) NOT NULL,
+      name        VARCHAR(50) NOT NULL,
+      email       VARCHAR(30) NOT NULL,
+      signup_date DATETIME NOT NULL,
+      last_login  DATETIME NOT NULL
+    )
+  ";
+
+  $query_setup_table_leagues = "
+    CREATE TABLE leagues (
+      id      INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      name    VARCHAR(50) NOT NULL
+    )
+  ";
+
+  $query_setup_table_teams = "
+    CREATE TABLE teams (
+      id        INT AUTO_INCREMENT PRIMARY KEY,
+      league_id INT NOT NULL,
+      name      VARCHAR(50) NOT NULL,
+      _group    VARCHAR(20) DEFAULT 'N/A'
+    )
+  ";
+
+  $query_setup_table_games = "
+    CREATE TABLE games (
+      id           INT AUTO_INCREMENT PRIMARY KEY,
+      league_id    INT,
+      type         VARCHAR(20),
+      round        INT,
+      home_id      INT,
+      away_id      INT,
+      home_goals   INT,
+      away_goals   INT,
+      date         DATETIME,
+      date_created DATETIME,
+      last_update  TIMESTAMP
+    )
+  ";
+
+  $query_setup_table_tables = "
+    CREATE TABLE tables (
+      league_id       INT,
+      team_id         INT,
+      wins            INT DEFAULT 0,
+      losses          INT DEFAULT 0,
+      draws           INT DEFAULT 0,
+      goals_scored    INT DEFAULT 0,
+      goals_against   INT DEFAULT 0,
+      points          INT DEFAULT 0,
+      goal_difference INT DEFAULT 0
+    )
+  ";
+
+  $msg = "";
+  if (isset($_POST["setup_database"])) {
+    if (isset($_POST["setup_create_database"])) {
+      queryMysql("DROP DATABASE IF EXISTS futables");
+      queryMysql($query_setup_create_database);
+      $msg .= " Database created.";
+      $db_connect = mysql_select_db($db_database);
+    }
+    if (isset($_POST["setup_table_users"])) {
+      queryMysql("DROP TABLE IF EXISTS users");
+      queryMysql($query_setup_table_users);
+      $msg .= " Table users created/updated.";
+    }
+    if (isset($_POST["setup_table_leagues"])) {
+      queryMysql("DROP TABLE IF EXISTS leagues");
+      queryMysql($query_setup_table_leagues);
+      $msg .= " Table leagues created/updated.";
+    }
+    if (isset($_POST["setup_table_teams"])) {
+      queryMysql("DROP TABLE IF EXISTS teams");
+      queryMysql($query_setup_table_teams);
+      $msg .= " Table teams created/updated.";
+    }
+    if (isset($_POST["setup_table_games"])) {
+      queryMysql("DROP TABLE IF EXISTS games");
+      queryMysql($query_setup_table_games);
+      $msg .= " Table games created/updated.";
+    }
+    if (isset($_POST["setup_table_tables"])) {
+      queryMysql("DROP TABLE IF EXISTS tables");
+      queryMysql($query_setup_table_tables);
+      $msg .= " Table tables created/updated.";
+    }
+  }
+
+  if ($db_connect) {
+    $msg .= " Database exists.";
+  } else {
+    $msg .= " Database does not exist.";
+  }
+
+?>
+
+<html>
+
+  <form method="POST">
+    <input type="text" name="setup_database" hidden/>
+    <input type="checkbox" name="setup_create_database"/> Create database
+    <input type="checkbox" name="setup_table_users"/> Users
+    <input type="checkbox" name="setup_table_leagues"/> Leagues
+    <input type="checkbox" name="setup_table_teams"/> Teams
+    <input type="checkbox" name="setup_table_games"/> Games
+    <input type="checkbox" name="setup_table_tables"/> Tables
+    <input type="submit" value="Setup database"/>
+  </form>
+
+  <p><?php echo $msg;?></p>
+
+  <p><a href="index.html">Home</a></p>
+
+</html>

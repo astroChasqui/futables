@@ -1,0 +1,104 @@
+body {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 14px;
+  background: #003300;
+  color: white;
+}
+hr {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#header {
+  width: 800px;
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+#header_hello {
+  width: 300px;
+}
+#header_login {
+  display: table-cell;
+  width: 400px;
+  text-align: right;
+}
+#header_logout {
+  width: 100px;
+  text-align: center;
+}
+#header_signup {
+  width: 100px;
+  text-align: center;
+}
+
+#user_content, #latest_games, #footer {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  font-size:20px;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+h2 {
+  font-size:18px;
+}
+h3 {
+  font-size:16px;
+  clear: both;
+  padding: 5px;
+}
+h4 {
+  font-size:14px;
+  clear: both;
+  padding: 5px;
+}
+
+a {
+  color: #FFFF99;
+  text-decoration: none;
+}
+a:hover {
+  color: #FFFFCC;
+  text-decoration: underline;
+}
+table {
+  font-size: inherit;
+}
+td {
+  background: gray;
+}
+select {
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: 5px;
+}
+input {
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: 5px;
+}
+.box_number {
+  width: 30px;
+  text-align: center;
+}
+.box_number_right {
+  width: 30px;
+  text-align: right;
+}
+.msg {
+  color: #FFFF99;
+}
+.errMsg {
+  color: #FF00CC;
+}
+#manage_container {
+  width: 800px;
+  margin-left:auto;
+  margin-right:auto;
+}

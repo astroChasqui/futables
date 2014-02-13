@@ -1,0 +1,206 @@
+<?php
+ob_start();
+session_start();
+?>
+
+<html>
+
+<head>
+  <title>FUTABLES - MANAGE</title>
+  <base href="/futables/">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link href="css/jCalendar.css" type="text/css" rel="stylesheet" />
+  <script src="js/functions.js"></script>
+  <script type="text/javascript" src="js/jCalendar.js"></script>
+</head>
+
+<?php include "include/manage.php";?>
+
+<body>
+
+  <div id="manage_container">
+
+    <h1>FUTABLES</h1>
+    <h2>MANAGE YOUR LEAGUES</h2>
+    <p>Hello, <?php echo "$user_name";?>.</p>
+    <div id="manage_msg" style="background:#006633;">
+      <?php
+        if ($msg) echo "<p class='msg'>$msg</p>";
+        if ($errMsg) echo "<p class='errMsg'>$errMsg</p>";
+        if (!$msg and !$errMsg) echo "<p>No messages to show.</p>";
+      ?>
+    </div>
+
+    <div id="manage_leagues" style="background:#006633;">
+      <?php include "include/manage_leagues.html";?>
+    </div>
+
+    <?php
+      if (isset($_POST["league_to_show"])) {
+        echo "<div id='manage_league_name' style='background:#006633;'>";
+        include "include/manage_league_name.html";
+        echo "</div>";
+        echo "<div id='manage_games' style='background:#006633;'>";
+        include "include/manage_games.html";
+        echo "</div>";
+      }
+    ?>
+
+  <?php
+  
+    if (isset($_POST["league_to_show"])) {
+
+      //include "include/manage_games.html";
+
+      echo "<div id='manage_teams'
+             style='background:#006633;
+                    display:table-cell;width:300px;'>";
+
+      echo "<h4>Teams</h4>";
+      if (isset($team_names)) {
+        echo "<form method='post'>";
+        echo "Edit, Team name, Group, Drop"."<br />";
+        foreach ($team_names as $index => $team_name) {
+          $team_id = $team_ids[$index];
+          $team_group = $team_groups[$index];
+          echo "<input type='checkbox'
+                       id='edit_team_$team_id'
+                       onClick='editTeam($team_id);'>";
+          echo "<input type='text'
+                       name='team_id[]'
+                       class='edit_team_$team_id'
+                       value='$team_id'
+                       disabled hidden>";
+          echo "<input type='text'
+                       name='team_name[]'
+                       class='edit_team_$team_id'
+                       value='$team_name'
+                       disabled>";
+          echo "<input type='text'
+                       name='team_group[]'
+                       class='edit_team_$team_id'
+                       value='$team_group'
+                       style='width: 30px'
+                       disabled>";
+          echo "<input type='checkbox'
+                       name='delete_team[]'
+                       class='edit_team_$team_id'
+                       value='$team_id'
+                       disabled>";
+          echo "<br />";
+        }
+        echo "<br />";
+        echo "<input type='text' name='update_teams' hidden>";
+        echo "<input type='text' name='league_id' value=$league_id hidden>";
+        echo "<input type='submit' value='Update'
+                     id='updateTeamsSubmit' disabled>";
+        echo "</form>";
+      } else {
+        echo "<p>There are no teams yet.</p>";
+      }
+      echo <<<__________END
+      <form method="post">
+        <input type="text" name="new_team_name" placeholder="New team name">
+        <input type="submit" value="Add team">
+        <input type="text" name="league_id" value=$league_id hidden>
+        <input type="text" name="add_team" hidden>
+      </form>
+      
+      </div>
+
+__________END;
+
+      echo "<div id='manage_tables'
+                 style='background:#006633;display:table-cell;
+                        width:500px;'>";
+      echo "<h4>Tables</h4>";
+
+      if (count($team_ids)) {
+
+        $query = "SELECT _group FROM teams WHERE league_id = $league_id";
+        $result = queryMysql($query);
+        while ($row = mysql_fetch_assoc($result)) {
+          $groups[] = $row['_group'];
+        }
+        $groups = array_unique($groups);
+
+        foreach ($groups as $group) {
+
+          $query = "SELECT *, teams.name FROM tables
+                    INNER JOIN teams ON (tables.team_id = teams.id)
+                    WHERE tables.league_id = $league_id
+                    AND   teams._group = '$group'
+                    ORDER BY tables.points DESC,
+                             tables.goal_difference DESC,
+                             tables.goals_scored DESC,
+                             teams.name";
+          $result = queryMysql($query);
+          if ($group != "N/A") echo "Group $group";
+            else echo "Regular season";
+          echo "<table>";
+          echo "<tr>
+                  <td><b>Pos</b></td>
+                  <td><b>Team</b></td>
+                  <td class='box_number_right'><b>GP</b></td>
+                  <td class='box_number_right'><b>W</b></td>
+                  <td class='box_number_right'><b>D</b></td>
+                  <td class='box_number_right'><b>L</b></td>
+                  <td class='box_number_right'><b>GS</b></td>
+                  <td class='box_number_right'><b>GA</b></td>
+                  <td class='box_number_right'><b>PTS</b></td>
+                  <td class='box_number_right'><b>GD</b></td>
+                </tr>";
+          $pos = 1;
+          while ($row = mysql_fetch_assoc($result)) {
+            $team_name = $row["name"];
+            $wins = $row["wins"];
+            $draws = $row["draws"];
+            $losses = $row["losses"];
+            $games_played = $wins+$draws+$losses;
+            $goals_scored = $row["goals_scored"];
+            $goals_against = $row["goals_against"];
+            $points = $row["points"];
+            $goal_difference = $row["goal_difference"];
+            echo "<tr>";
+            echo "<td>$pos</td>"; $pos += 1;
+            echo "<td>$team_name</td>";
+            echo "<td class='box_number_right'>$games_played</td>";
+            echo "<td class='box_number_right'>$wins</td>";
+            echo "<td class='box_number_right'>$draws</td>";
+            echo "<td class='box_number_right'>$losses</td>";
+            echo "<td class='box_number_right'>$goals_scored</td>"; 
+            echo "<td class='box_number_right'>$goals_against</td>";
+            echo "<td class='box_number_right'>$points</td>";
+            echo "<td class='box_number_right'>$goal_difference</td>";
+            echo "</tr>";
+          }
+          echo "</table>";
+        }
+      } else {
+        echo "<p>There is no table.</p>";
+      }
+      echo "</div>";
+
+      $message = "This will delete all existing data for $league_name. ".
+                 "Are you sure you want to do this?";
+      echo <<<__________END
+      <form method="post"
+            onsubmit="return confirm('$message');">
+        <input type="text" name="delete_league" value="$league_id" hidden>
+        <input type="text" name="league_name" value="$league_name" hidden>
+        <input type="submit" value="Drop league"
+               style="background:red;border:2px solid orange;">
+      </form>
+__________END;
+
+    }
+
+  ?>
+
+  <p><a href="index.html">Home</a></p>
+
+  </div>
+
+</body>
+
+</html>

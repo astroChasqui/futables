@@ -1,0 +1,166 @@
+<h4>Games</h4>
+
+<?php
+
+      $query = "SELECT team_home.name, home_goals,
+                       team_away.name, away_goals,
+                       team_home.id, team_away.id,
+                       round, games.id, date
+                FROM games
+                INNER JOIN teams team_home ON (games.home_id = team_home.id)
+                INNER JOIN teams team_away ON (games.away_id = team_away.id)
+                WHERE games.league_id = $league_id
+                ORDER BY date DESC
+                ";
+      $result = queryMysql($query);
+      if (mysql_num_rows($result) > 0) {
+        echo "<form method='post'>";
+
+        echo "<table style='margin-left:auto;margin-right:auto;
+                            text-align:center'>
+                <tr>
+                  <td>Edit</td>
+                  <td>Round</td>
+                  <td>Home team</td>
+                  <td>HG</td>
+                  <td>AG</td>
+                  <td>Away team</td>
+                  <td>Date</td>
+                  <td>Drop</td>";
+        while ($row = mysql_fetch_row($result)) {
+          $game_id = $row[7];
+          $datex = date('Y-m-d H:i', strtotime($row[8]));
+          echo "<tr>
+                  <td>
+                    <input type='checkbox'
+                           onClick='editGame($game_id);'>
+                    <input type='text'
+                           name='game_id[]'
+                           class='edit_game_$game_id'
+                           value=$game_id
+                           disabled hidden>
+                  </td>
+                  <td>
+                    <input type='text' value=$row[6]
+                           style='width:30px; text-align: center'
+                           name='round[]' class='edit_game_$game_id'
+                           disabled>
+                  </td>
+                  <td>
+                    <input type='text' value='$row[0]' disabled>
+                    <input type='text' value='$row[4]'
+                           name='home_id[]' hidden>
+                  </td>
+                  <td>
+                    <input type='text' value='$row[1]'
+                           style='width:30px; text-align: center'
+                           name='home_goals[]' class='edit_game_$game_id'
+                          disabled>
+                  </td>
+                  <td>
+                    <input type='text' value='$row[3]'
+                           style='width:30px; text-align: center'
+                           name='away_goals[]' class='edit_game_$game_id'
+                          disabled>
+                  </td>
+                  <td>
+                    <input type='text' value='$row[2]' disabled>
+                    <input type='text' value='$row[5]'
+                           name='away_id[]' hidden>
+                  </td>
+                  <td>
+                    <input type='text' value='$datex' name='date[]'
+                           disabled class='edit_game_$game_id'>
+                  </td>
+                  <td>
+                    <input type='checkbox' onChange='editGame($game_id);'
+                           name='delete_game[]'
+                           value='$game_id'>
+                  </td>
+                </tr>";
+        }
+        echo "<tr><td colspan='8' style='text-align:left;'>
+                <input type='text' name='update_games' hidden>
+                <input type='text' name='league_id' value=$league_id hidden>
+                <input type='submit' value='Update'
+                       id='updateGamesSubmit' disabled>
+              </td></tr>
+              </table>
+              </form>";
+      } else {
+        echo "<p>There are no games yet.</p>";
+      }
+
+?>
+
+      <form method="post">
+
+        <table style="margin-left:auto;margin-right:auto;text-align:center;">
+          <tr>
+            <td>Round</td>
+            <td>Home team</td>
+            <td>HG</td>
+            <td>AG</td>
+            <td>Away team</td>
+            <td>Date</td>
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>
+              <input type="text" name="round" class="box_number">
+            </td>
+            <td>
+
+        <select name="home_id">
+          <option disabled selected>HOME TEAM</option>
+
+<?php
+      foreach ($team_names as $index => $team_name) {
+        echo "<option value=$team_ids[$index]>$team_name</option>";
+      }
+      echo <<<__________END
+        </select>
+
+            </td>
+
+            <td>
+              <input type="text" name="home_goals" class="box_number">
+            </td>
+
+            <td>
+              <input type="text" name="away_goals" class="box_number">
+            </td>
+
+            <td>
+        <select name="away_id">
+          <option disabled selected>AWAY TEAM</option>
+__________END;
+      foreach ($team_names as $index => $team_name) {
+        echo "<option value=$team_ids[$index]>$team_name</option>";
+      }
+
+      $date_now = date('Y-m-d H:i', time());
+      echo <<<__________END
+            </td>
+
+            <td>
+              <input type="text" value="$date_now" name="date"
+                     class="jc_date" id="jc_date"
+                    onclick="viewCalendar('jcalendar_parent', 'jc_date')"/>
+              <div id="jcalendar_parent" class="jcalendar_parent"
+                   style="z-index: 999"></div>
+            </td>
+
+            <td>
+              <input type="submit" value="Add game">
+              <input type="text" name="league_id" value=$league_id hidden>
+              <input type="text" name="add_game" hidden>
+            </td>
+
+          </tr>
+
+        </table>
+      </form>
+__________END
+?>
