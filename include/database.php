@@ -8,6 +8,12 @@
   //use this to deploy on zymic
   //$db_database="astrochasqui_zxq_futables";
   //$db_username="898078_futables";
+  
+  //to deploy on 000webhost
+  //$db_hostname = "mysql13.000webhost.com";
+  //$db_database = "a3669356_futable";
+  //$db_username = "a3669356_root";
+  //$db_password = "jxXp!_9z";
 
   mysql_connect($db_hostname, $db_username, $db_password)
     or die(mysql_error());
