@@ -16,7 +16,7 @@ hr {
   margin-right: auto;
 }
 #header_hello {
-  width: 300px;
+  width: 280px;
 }
 #header_login {
   display: table-cell;
@@ -69,6 +69,8 @@ a:hover {
 }
 table {
   font-size: inherit;
+  margin-left: auto;
+  margin-right: auto;
 }
 td {
   background: gray;

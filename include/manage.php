@@ -18,7 +18,6 @@
   $user_name = $row["name"];
 
   $msg = $errMsg = "";
-  $updateTable = False;
 
   if (isset($_POST["create_new_league"])) {
     $new_league_name = sanitizeString($_POST["new_league_name"]);
@@ -36,7 +35,9 @@
         $msg .= " New league, $new_league_name, created.";
         $result = queryMysql("SELECT LAST_INSERT_ID()");
         $row = mysql_fetch_assoc($result);
-        $_POST["league_id"] = $row["LAST_INSERT_ID()"];
+        //$_POST["league_id"] = $row["LAST_INSERT_ID()"];
+        $_SESSION["league_id"] = $row["LAST_INSERT_ID()"];
+        header("Location:".$_SERVER['PHP_SELF']);
       }
     } else {
       $errMsg .= " Need a name for your new league.";
@@ -51,6 +52,8 @@
     queryMysql("DELETE FROM games WHERE league_id = $league_id");
     queryMysql("DELETE FROM tables WHERE league_id = $league_id");
     $msg .= "$league_name deleted.";
+    unset($_SESSION["league_id"], $_SESSION["league_to_show"]);
+    header("Location:".$_SERVER['PHP_SELF']);
   }
 
   $result = queryMysql("SELECT id, name FROM leagues
@@ -75,8 +78,9 @@
       $query = "INSERT INTO tables (league_id, team_id)
                 VALUES ($league_id, $team_id)";
       queryMysql($query);
-      $updateTable = True;
+      update_table($league_id);
       $msg = "New team, $new_team_name, added to the league.";
+      header("Location:".$_SERVER['PHP_SELF']);
     } else {
       $errMsg = "Need a name for your new team.";
     }
@@ -103,10 +107,11 @@
         $query = "DELETE FROM teams
                   WHERE id = $team_id";
         queryMysql($query);
-        $updateTable = True;
+        update_table($league_id);
       }
       $msg .= "Team(s) deleted. ";
     }
+    header("Location:".$_SERVER['PHP_SELF']);
   }
 
   do if (isset($_POST["add_game"]) or isset($_POST["update_games"])) {
@@ -162,10 +167,11 @@
       }
       $msg = "Game(s) updated.";
     }
-    $updateTable = True;
+    update_table($league_id);
+    header("Location:".$_SERVER['PHP_SELF']);
   } while(false);
 
-  if ($updateTable) {
+  function update_table($league_id) {
     $result = queryMysql("SELECT id, name FROM teams
                           WHERE league_id = $league_id");
     while ($row = mysql_fetch_assoc($result)) {
@@ -224,11 +230,19 @@
 
   # If a league is requested, load its info and teams
 
-  if (isset($_POST["league_id"]))
-    $_POST["league_to_show"] = sanitizeString($_POST["league_id"]);
+  //if (isset($_POST["league_id"]))
+  if (isset($_SESSION["league_id"]))
+    $_SESSION["league_to_show"] = $_SESSION["league_id"];
 
   if (isset($_POST["league_to_show"])) {
-    $league_id = sanitizeString($_POST["league_to_show"]);
+    $_SESSION["league_to_show"] = sanitizeString($_POST["league_to_show"]);
+    header("Location:".$_SERVER['PHP_SELF']);
+  }
+
+  if (isset($_SESSION["league_to_show"])) {
+  //if (isset($_SESSION["league_to_show"])) {
+    $league_id = $_SESSION["league_to_show"];
+    $_SESSION["league_id"] = $league_id;
     $result = queryMysql("SELECT name FROM leagues WHERE id = $league_id");
     $row = mysql_fetch_assoc($result);
     $league_name = $row["name"];
@@ -245,5 +259,6 @@
   }
 
   //print_r($_POST);
+  //print_r($_SESSION);
 
 ?>

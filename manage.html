@@ -36,7 +36,7 @@ session_start();
     </div>
 
     <?php
-      if (isset($_POST["league_to_show"])) {
+      if (isset($_SESSION["league_to_show"])) {
         echo "<div id='manage_league_name' style='background:#006633;'>";
         include "include/manage_league_name.html";
         echo "</div>";
@@ -48,7 +48,7 @@ session_start();
 
   <?php
   
-    if (isset($_POST["league_to_show"])) {
+    if (isset($_SESSION["league_to_show"])) {
 
       //include "include/manage_games.html";
 

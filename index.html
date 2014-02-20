@@ -83,6 +83,14 @@ session_start();
       $result = queryMysql($query);
       if (mysql_num_rows($result)) {
         echo "<table>";
+        echo "<tr>
+                <td>Home Team</td>
+                <td>HG</td>
+                <td>AG</td>
+                <td>Away Team</td>
+                <td>Competition</td>
+                <td>User</td>
+              </tr>";
         while ($row = mysql_fetch_assoc($result)) {
           //print_r($row);
           if ($row["home_goals"] == "" or $row["away_goals"] == "") continue;

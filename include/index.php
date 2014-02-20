@@ -23,13 +23,17 @@
         $row = mysql_fetch_assoc($result);
         $_SESSION["user_id"]   = $user_id   = $row["id"];
         $_SESSION["user_name"] = $user_name = $row["name"];
+        header("Location:".$_SERVER['PHP_SELF']);
       } else {
         $errMsg = "Invalid username/password combination";
       }
     }
   }
 
-  if (isset($_POST["logout"])) destroySession();
+  if (isset($_POST["logout"])) {
+    destroySession();
+    header("Location:".$_SERVER['PHP_SELF']);
+  }
 
   if (isset($_SESSION["user_id"])) {
     $hideLogin  = "hidden";
