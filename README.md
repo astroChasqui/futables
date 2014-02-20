@@ -3,7 +3,7 @@ futables
 
 Simple PHP app to keep track of soccer leagues
 
-http://astrochasqui.zxq.net/futables/
+http://astrochasqui.netai.net/futables/
 
 Note
 ----
