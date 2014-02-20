@@ -16,11 +16,11 @@ hr {
   margin-right: auto;
 }
 #header_hello {
-  width: 280px;
+  width: 200px;
 }
 #header_login {
   display: table-cell;
-  width: 400px;
+  width: 500px;
   text-align: right;
 }
 #header_logout {
