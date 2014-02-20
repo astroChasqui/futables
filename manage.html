@@ -138,17 +138,17 @@ __________END;
           if ($group != "N/A") echo "Group $group";
             else echo "Regular season";
           echo "<table>";
-          echo "<tr>
-                  <td><b>Pos</b></td>
-                  <td><b>Team</b></td>
-                  <td class='box_number_right'><b>GP</b></td>
-                  <td class='box_number_right'><b>W</b></td>
-                  <td class='box_number_right'><b>D</b></td>
-                  <td class='box_number_right'><b>L</b></td>
-                  <td class='box_number_right'><b>GS</b></td>
-                  <td class='box_number_right'><b>GA</b></td>
-                  <td class='box_number_right'><b>PTS</b></td>
-                  <td class='box_number_right'><b>GD</b></td>
+          echo "<tr class='table_header'>
+                  <td>Pos</td>
+                  <td>Team</td>
+                  <td>GP</td>
+                  <td>W</td>
+                  <td>D</td>
+                  <td>L</td>
+                  <td>GS</td>
+                  <td>GA</td>
+                  <td>PTS</td>
+                  <td>GD</td>
                 </tr>";
           $pos = 1;
           while ($row = mysql_fetch_assoc($result)) {

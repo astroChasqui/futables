@@ -78,26 +78,26 @@ session_start();
                 INNER JOIN teams team_away ON (games.away_id = team_away.id)
                 INNER JOIN leagues ON (games.league_id = leagues.id)
                 INNER JOIN users ON (leagues.user_id = users.id)
-                ORDER BY date
+                ORDER BY date DESC
                 LIMIT 5";
       $result = queryMysql($query);
       if (mysql_num_rows($result)) {
         echo "<table>";
-        echo "<tr>
-                <td>Home Team</td>
+        echo "<tr class='table_header'>
+                <td style='width:150px;'>Home Team</td>
                 <td>HG</td>
                 <td>AG</td>
-                <td>Away Team</td>
-                <td>Competition</td>
-                <td>User</td>
+                <td style='width:150px;'>Away Team</td>
+                <td style='width:150px;'>Competition</td>
+                <td style='width:150px;'>User</td>
               </tr>";
         while ($row = mysql_fetch_assoc($result)) {
           //print_r($row);
           if ($row["home_goals"] == "" or $row["away_goals"] == "") continue;
           echo "<tr>
                   <td>$row[thName]</td>
-                  <td>$row[home_goals]</td>
-                  <td>$row[away_goals]</td>
+                  <td class='box_number'>$row[home_goals]</td>
+                  <td class='box_number'>$row[away_goals]</td>
                   <td>$row[taName]</td>
                   <td>$row[league_name]</td>
                   <td>$row[user_name]</td>

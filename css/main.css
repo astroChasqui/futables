@@ -73,7 +73,9 @@ table {
   margin-right: auto;
 }
 td {
+  text-align: center;
   background: gray;
+  padding: 2px;
 }
 select {
   font-family: inherit;
@@ -92,6 +94,10 @@ input {
 .box_number_right {
   width: 30px;
   text-align: right;
+}
+.table_header {
+  font-weight: bold;
+  color: yellow;
 }
 .msg {
   color: #FFFF99;
