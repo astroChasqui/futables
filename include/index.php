@@ -6,6 +6,7 @@
   $username = $errMsg = $hideSignup = "";
   $hideLogin  = "";
   $hideLogout = $hideManage = "hidden";
+  $_SESSION["msg"] = $_SESSION["errMsg"] = "";
 
   if (isset($_POST["login"])) {
     $username = get_post("username");

@@ -1,0 +1,21 @@
+<h3>Users list</h3>
+
+<?php
+  $query = "SELECT name, signup_date FROM users ORDER BY signup_date DESC";
+  $users = queryMysql($query);
+  if (mysql_num_rows($users)) {
+    echo "<table>
+            <tr class='table_header'>
+              <td>Name</td>
+              <td>Signup date</td>
+            </tr>
+            ";
+  }
+  while ($user = mysql_fetch_assoc($users)) {
+    echo "<tr>
+            <td style='width:150px;'>$user[name]</td>
+            <td style='width:200px;'>$user[signup_date]</td>
+          </tr>";
+  }
+  echo "</table>";
+?>

@@ -6,10 +6,10 @@
   $username = $name = $email = $msg = $errMsg = $hideSignup = "";
 
   if (isset($_POST["signup"])) {
-    $username = get_post("username");
-    $password = get_post("password");
     $name = get_post("name");
     $email = get_post("email");
+    $username = get_post("username");
+    $password = get_post("password");
     $errMsg .= validate_name($name);
     $errMsg .= validate_email($email);
     $errMsg .= validate_username($username);
@@ -26,7 +26,11 @@
       queryMysql($query);
       $msg = "Sign up successful. Go back to the home page and log in.";
       $hideSignup = "hidden";
+      $_SESSION["msg"] =  $msg;
+      header('Location:'.$_SERVER['PHP_SELF']);
     }
   }
+
+  if (isset($_SESSION["msg"])) $msg = $_SESSION["msg"];
 
 ?>

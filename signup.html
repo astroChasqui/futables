@@ -1,3 +1,8 @@
+<?php
+ob_start();
+session_start();
+?>
+
 <html>
 
 <head>
@@ -11,23 +16,30 @@
 <body>
 
   <h1>FUTABLES</h1>
-  <h2>SIGN UP</h2>
 
-  <?php if ($msg) echo "<p>$msg</p>";?>
-  <?php if ($errMsg) echo "<p>$errMsg</p>";?>
+  <hr />
 
-  <form method="POST" <?php echo $hideSignup;?>>
-    <input type="text" name="name" placeholder="Name"
-           value="<?php echo $name;?>"><br />
-    <input type="text" name="email" placeholder="Email"
-           value="<?php echo $email;?>"><br />
-    <input type="text" name="username" placeholder="Username"
-           value="<?php echo $username;?>"><br />
-    <input type="password" name="password" placeholder="Password" /><br />
-    <input type="submit" value="SIGN UP" name="signup">
-  </form>
+  <div id="user_content">
 
-  <p><a href="index.html">Home</a></p>
+    <h2 style="text-align:center;">SIGN UP</h2>
+
+    <form method="POST" <?php echo $hideSignup;?> style="text-align:center;">
+    <?php if ($msg) echo "<p class='msg'>$msg</p>";?>
+    <?php if ($errMsg) echo "<p class='errMsg'>$errMsg</p>";?>
+      <input type="text" name="name" placeholder="Name"
+             value="<?php echo $name;?>"><br />
+      <input type="text" name="email" placeholder="Email"
+             value="<?php echo $email;?>"><br />
+      <input type="text" name="username" placeholder="Username"
+             value="<?php echo $username;?>"><br />
+      <input type="password" name="password" placeholder="Password" /><br />
+      <input type="submit" value="SIGN UP" name="signup">
+    </form>
+
+    <hr />
+    <p><a href="index.html">Home</a></p>
+
+  </div>
 
 </body>
 

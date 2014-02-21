@@ -41,7 +41,7 @@ session_start();
       </form>
     </div>
     <div id="header_signup">
-      <form method="POST" <?php echo $hideSignup;?> action="signup.html">
+      <form method="GET" <?php echo $hideSignup;?> action="signup.html">
         <input type="submit" value="SIGN UP" name="signup_link" />
       </form>
     </div>
@@ -51,13 +51,17 @@ session_start();
 
   <div id="user_content">
     <?php if ($errMsg) echo "<hr /><p class='errMsg'>$errMsg</p>";?>
-    <p <?php echo $hideManage;?>>
+  </div>
+
+  <div id="user_content" <?php echo $hideManage;?>>
+    <?php if ($errMsg) echo "<hr /><p class='errMsg'>$errMsg</p>";?>
+    <p>
       <a href="manage.html">MANAGE YOUR LEAGUES</a>
     </p>
-    <p <?php echo $hideManage;?>>
+    <p>
       <a href="tables.html">VIEW YOUR TABLES</a>
     </p>
-    <p <?php echo $hideManage;?>>
+    <p>
       <a href="profile.html">EDIT PROFILE</a>
     </p>
   </div>
@@ -65,51 +69,11 @@ session_start();
   <hr />
 
   <div id="latest_games">
+    <?php include "include/index_latest_games.html";?>
+  </div>
 
-    <h3>Latest games</h3>
-
-    <?php
-
-      $query = "SELECT *,
-                       team_home.name as thName, team_away.name as taName,
-                       leagues.name as league_name, users.name as user_name
-                FROM games
-                INNER JOIN teams team_home ON (games.home_id = team_home.id)
-                INNER JOIN teams team_away ON (games.away_id = team_away.id)
-                INNER JOIN leagues ON (games.league_id = leagues.id)
-                INNER JOIN users ON (leagues.user_id = users.id)
-                ORDER BY date DESC
-                LIMIT 5";
-      $result = queryMysql($query);
-      if (mysql_num_rows($result)) {
-        echo "<table>";
-        echo "<tr class='table_header'>
-                <td style='width:150px;'>Home Team</td>
-                <td>HG</td>
-                <td>AG</td>
-                <td style='width:150px;'>Away Team</td>
-                <td style='width:150px;'>Competition</td>
-                <td style='width:150px;'>User</td>
-              </tr>";
-        while ($row = mysql_fetch_assoc($result)) {
-          //print_r($row);
-          if ($row["home_goals"] == "" or $row["away_goals"] == "") continue;
-          echo "<tr>
-                  <td>$row[thName]</td>
-                  <td class='box_number'>$row[home_goals]</td>
-                  <td class='box_number'>$row[away_goals]</td>
-                  <td>$row[taName]</td>
-                  <td>$row[league_name]</td>
-                  <td>$row[user_name]</td>
-                </tr>";
-        }
-        echo "</table>";
-      } else {
-        echo "<p>There are no games in the database.</p>";
-      }
-    
-    ?>
-
+  <div id="users_list">
+    <?php include "include/index_users_list.html";?>
   </div>
 
   <hr />
