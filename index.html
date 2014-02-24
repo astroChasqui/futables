@@ -22,9 +22,10 @@ session_start();
   <div id="header">
     <div id="header_hello">
       <?php
-        if (isset($_SESSION["user_id"]))
+        if (isset($_SESSION["user_id"])) {
           echo "Hello, $_SESSION[user_name].";
-        else echo "Hello, Visitor.";
+          $username   = $_SESSION["user_username"];
+        } else echo "Hello, Visitor.";
       ?>
     </div>
     <div id="header_login">
@@ -59,7 +60,7 @@ session_start();
       <a href="manage.html">MANAGE YOUR LEAGUES</a>
     </p>
     <p>
-      <a href="tables.html">VIEW YOUR TABLES</a>
+      <a href=<?php echo "tables/".$username."/";?>>VIEW YOUR TABLES</a>
     </p>
     <p>
       <a href="profile.html">EDIT PROFILE</a>

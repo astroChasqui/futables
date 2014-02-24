@@ -1,4 +1,9 @@
 <?php
+ob_start();
+session_start();
+?>
+
+<?php
 
   $username = $_GET["username"];
 
@@ -32,26 +37,34 @@
 
   <h1>FUTABLES</h1>
 
-  <h2>TABLES</h2>
+  <hr />
 
-  <?php
-    echo "<p>$tables_user_name</p>";
+  <div id="user_content">
 
-    if (isset($leagues)) {
-      echo "<ul>";
-      foreach ($leagues as $index => $league) {
-        $league = str_replace(" ", "_", $league);
-        echo "<li><a href='$username/$league'>
-                  $league</a></li>";
+    <?php
+      echo "<h2>TABLES: $tables_user_name</h2>";
+
+      if (isset($leagues)) {
+        echo "<ul>";
+        foreach ($leagues as $index => $league) {
+          $league = str_replace(" ", "_", $league);
+          echo "<li><a href='tables/$username/$league/'>
+                    $league</a></li>";
+        }
+        echo "</ul>";
+      } else {
+        echo "No leagues to show.";
       }
-      echo "</ul>";
-    } else {
-      echo "No leagues to show.";
-    }
 
-  ?>
+    ?>
 
-  <p><a href="index.html">Home</a></p>
+  </div>
+
+  <hr />
+
+  <div id="footer">
+    <p><a href="index.html">Home</a></p>
+  </div>
 
 </body>
 

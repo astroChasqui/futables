@@ -24,6 +24,7 @@
         $row = mysql_fetch_assoc($result);
         $_SESSION["user_id"]   = $user_id   = $row["id"];
         $_SESSION["user_name"] = $user_name = $row["name"];
+        $_SESSION["user_username"] = $user_name = $row["username"];
         header("Location:".$_SERVER['PHP_SELF']);
       } else {
         $errMsg = "Invalid username/password combination";
