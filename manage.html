@@ -117,7 +117,9 @@ __________END;
 
       if (count($team_ids)) {
 
-        $query = "SELECT _group FROM teams WHERE league_id = $league_id";
+        $query = "SELECT _group FROM teams
+                  WHERE league_id = $league_id
+                  ORDER BY _group";
         $result = queryMysql($query);
         while ($row = mysql_fetch_assoc($result)) {
           $groups[] = $row['_group'];

@@ -9,6 +9,7 @@
             INNER JOIN teams team_away ON (games.away_id = team_away.id)
             INNER JOIN leagues ON (games.league_id = leagues.id)
             INNER JOIN users ON (leagues.user_id = users.id)
+            WHERE home_goals != ''
             ORDER BY date DESC
             LIMIT 5";
   $result = queryMysql($query);
@@ -23,8 +24,6 @@
               <td style='width:150px;'>User</td>
             </tr>";
     while ($row = mysql_fetch_assoc($result)) {
-      //print_r($row);
-      if ($row["home_goals"] == "" or $row["away_goals"] == "") continue;
       echo "<tr>
               <td>$row[thName]</td>
               <td class='box_number'>$row[home_goals]</td>
