@@ -3,7 +3,8 @@
 <?php
   $query = "SELECT *,
                    team_home.name as thName, team_away.name as taName,
-                   leagues.name as league_name, users.name as user_name
+                   leagues.name as league_name,
+                   users.name as user_name, users.username as user_username
             FROM games
             INNER JOIN teams team_home ON (games.home_id = team_home.id)
             INNER JOIN teams team_away ON (games.away_id = team_away.id)
@@ -24,13 +25,20 @@
               <td style='width:150px;'>User</td>
             </tr>";
     while ($row = mysql_fetch_assoc($result)) {
+      $league_name = str_replace(" ", "_", $row["league_name"]);
       echo "<tr>
               <td>$row[thName]</td>
               <td class='box_number'>$row[home_goals]</td>
               <td class='box_number'>$row[away_goals]</td>
               <td>$row[taName]</td>
-              <td>$row[league_name]</td>
-              <td>$row[user_name]</td>
+              <td>
+                <a href='$row[user_username]/$league_name/'>
+                  $row[league_name]
+                </a>
+              </td>
+              <td>
+                <a href='$row[user_username]/'>$row[user_name]</a>
+              </td>
             </tr>";
     }
     echo "</table>";

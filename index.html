@@ -6,7 +6,7 @@ session_start();
 <html>
 
 <head>
-  <title>FUTABLES</title>
+  <title>FuTables</title>
   <base href="/futables/">
   <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
@@ -15,7 +15,7 @@ session_start();
 
 <body>
 
-  <h1>FUTABLES</h1>
+  <h1>FuTables</h1>
 
   <hr />
 
@@ -43,7 +43,7 @@ session_start();
     </div>
     <div id="header_signup">
       <form method="GET" <?php echo $hideSignup;?> action="signup.html">
-        <input type="submit" value="SIGN UP" name="signup_link" />
+        <input type="submit" value="SIGN UP" />
       </form>
     </div>
   </div>
@@ -60,10 +60,7 @@ session_start();
       <a href="manage.html">MANAGE YOUR LEAGUES</a>
     </p>
     <p>
-      <a href=<?php echo "tables/".$username."/";?>>VIEW YOUR TABLES</a>
-    </p>
-    <p>
-      <a href="profile.html">EDIT PROFILE</a>
+      <a href=<?php echo $username."/";?>>VIEW YOUR TABLES</a>
     </p>
   </div>
 

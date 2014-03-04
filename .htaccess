@@ -1,4 +1,5 @@
 # Do not remove this line, otherwise mod_rewrite rules will stop working
 RewriteEngine On
 RewriteBase /futables
-RewriteRule ^tables/([0-9A-Za-z_]+)/?$ tables.html?username=$1 [NC,L]
+RewriteRule ^([0-9A-Za-z_]+)/?$ tables.html?username=$1 [NC,L]
+RewriteRule ^([0-9A-Za-z_]+)/([0-9A-Za-z_]+)/?$ tables.html?username=$1&league=$2 [NC,L]

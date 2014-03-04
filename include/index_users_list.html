@@ -1,7 +1,8 @@
 <h3>Users list</h3>
 
 <?php
-  $query = "SELECT name, signup_date FROM users ORDER BY signup_date DESC";
+  $query = "SELECT username, name, signup_date
+            FROM users ORDER BY signup_date DESC";
   $users = queryMysql($query);
   if (mysql_num_rows($users)) {
     echo "<table>
@@ -13,7 +14,9 @@
   }
   while ($user = mysql_fetch_assoc($users)) {
     echo "<tr>
-            <td style='width:150px;'>$user[name]</td>
+            <td style='width:150px;'>
+              <a href='$user[username]/'>$user[name]</a>
+            </td>
             <td style='width:200px;'>$user[signup_date]</td>
           </tr>";
   }

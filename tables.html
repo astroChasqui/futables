@@ -13,11 +13,11 @@ session_start();
   $result = queryMysql("SELECT id, name FROM users
                         WHERE username = '$username'");
   $row = mysql_fetch_assoc($result);
-  $tables_user_id = $row["id"];
-  $tables_user_name = $row["name"];
+  $user_id = $row["id"];
+  $user_name = $row["name"];
 
   $result = queryMysql("SELECT id, name FROM leagues
-                        WHERE user_id = $tables_user_id");
+                        WHERE user_id = $user_id");
   while ($row = mysql_fetch_assoc($result)) {
     $league_ids[] = $row["id"];
     $leagues[] = $row["name"];
@@ -28,32 +28,121 @@ session_start();
 <html>
 
 <head>
-  <title>FUTABLES - Tables</title>
+  <title>FuTables: <?php echo "$user_name";?></title>
   <base href="/futables/">
   <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 
 <body>
 
-  <h1>FUTABLES</h1>
+  <h1>FuTables: <?php echo "$user_name";?></h1>
 
   <hr />
 
   <div id="user_content">
 
     <?php
-      echo "<h2>TABLES: $tables_user_name</h2>";
 
       if (isset($leagues)) {
         echo "<ul>";
         foreach ($leagues as $index => $league) {
-          $league = str_replace(" ", "_", $league);
-          echo "<li><a href='tables/$username/$league/'>
+          $_league = str_replace(" ", "_", $league);
+          echo "<li><a href='$username/$_league/'>
                     $league</a></li>";
         }
         echo "</ul>";
       } else {
         echo "No leagues to show.";
+      }
+
+      if (isset($_GET["league"])) {
+        $league_name = str_replace("_", " ", $_GET["league"]);
+
+        $result = queryMysql("SELECT id FROM leagues
+                              WHERE name = '$league_name'
+                              AND user_id = $user_id");
+        $row = mysql_fetch_assoc($result);
+        $league_id = $row["id"];
+        $result = queryMysql("SELECT id, name, _group FROM teams
+                              WHERE league_id = $league_id ORDER BY name");
+        $team_ids = array();
+        $team_names = array();
+        $team_groups = array();
+        while ($row = mysql_fetch_assoc($result)) {
+          $team_ids[] = $row["id"];
+          $team_names[] = $row["name"];
+          $team_groups[] = $row["_group"];
+        }
+
+        if (count($team_ids)) {
+
+          $query = "SELECT _group FROM teams
+                    WHERE league_id = $league_id
+                    ORDER BY _group";
+          $result = queryMysql($query);
+          while ($row = mysql_fetch_assoc($result)) {
+            $groups[] = $row['_group'];
+          }
+          $groups = array_unique($groups);
+
+          foreach ($groups as $group) {
+
+            $query = "SELECT *, teams.name FROM tables
+                      INNER JOIN teams ON (tables.team_id = teams.id)
+                      WHERE tables.league_id = $league_id
+                      AND   teams._group = '$group'
+                      ORDER BY tables.points DESC,
+                               tables.goal_difference DESC,
+                               tables.goals_scored DESC,
+                               teams.name";
+            $result = queryMysql($query);
+            if ($group != "N/A") echo "Group $group";
+              else echo "Regular season";
+            echo "<table>";
+            echo "<tr class='table_header'>
+                    <td>Pos</td>
+                    <td>Team</td>
+                    <td>GP</td>
+                    <td>W</td>
+                    <td>D</td>
+                    <td>L</td>
+                    <td>GS</td>
+                    <td>GA</td>
+                    <td>PTS</td>
+                    <td>GD</td>
+                  </tr>";
+            $pos = 1;
+            while ($row = mysql_fetch_assoc($result)) {
+              $team_name = $row["name"];
+              $wins = $row["wins"];
+              $draws = $row["draws"];
+              $losses = $row["losses"];
+              $games_played = $wins+$draws+$losses;
+              $goals_scored = $row["goals_scored"];
+              $goals_against = $row["goals_against"];
+              $points = $row["points"];
+              $goal_difference = $row["goal_difference"];
+              echo "<tr>";
+              echo "<td>$pos</td>"; $pos += 1;
+              echo "<td>$team_name</td>";
+              echo "<td class='box_number_right'>$games_played</td>";
+              echo "<td class='box_number_right'>$wins</td>";
+              echo "<td class='box_number_right'>$draws</td>";
+              echo "<td class='box_number_right'>$losses</td>";
+              echo "<td class='box_number_right'>$goals_scored</td>"; 
+              echo "<td class='box_number_right'>$goals_against</td>";
+              echo "<td class='box_number_right'>$points</td>";
+              echo "<td class='box_number_right'>$goal_difference</td>";
+              echo "</tr>";
+            }
+            echo "</table>";
+          }
+        } else {
+          echo "<p>There is no table.</p>";
+        }
+
+
+
       }
 
     ?>
